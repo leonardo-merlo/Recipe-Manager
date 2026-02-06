@@ -4,16 +4,57 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-    url      = env("DATABASE_URL")
+  url      = env("DATABASE_URL")
 }
 
 model Recipe {
-  id          Int      @id @default(autoincrement())
-  title       String
-  image       String
-  ingredients String
-  instructions String
-  source      String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id               Int                @id @default(autoincrement())
+  title            String
+  image            String
+  RecipeIngredient RecipeIngredient[]
+  instructions     String
+  source           String
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+}
+
+model Ingredient {
+  id               Int                @id @default(autoincrement())
+  name             String             @unique
+  category         String?
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  RecipeIngredient RecipeIngredient[]
+  ShoppingListItem ShoppingListItem[]
+}
+
+model RecipeIngredient {
+  id           Int        @id @default(autoincrement())
+  recipeId     Int
+  recipe       Recipe     @relation(fields: [recipeId], references: [id])
+  ingredientId Int
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id])
+  quantity     Int
+  unit         String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+model ShoppingList {
+  id               Int                @id @default(autoincrement())
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  ShoppingListItem ShoppingListItem[]
+}
+
+model ShoppingListItem {
+  id             Int          @id @default(autoincrement())
+  shoppingListId Int
+  shoppingList   ShoppingList @relation(fields: [shoppingListId], references: [id])
+  ingredientId   Int
+  ingredient     Ingredient   @relation(fields: [ingredientId], references: [id])
+  quantity       Int
+  unit           String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
 }
