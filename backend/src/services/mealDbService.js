@@ -1,33 +1,59 @@
-const searchRecipes = async (query) => {
-  const response = await fetch(
-    `https://www.themealdb.com/api/json/v1/1/search.php?s=${query}`
-  );
-  const data = await response.json();
+const parseQuantity = (text) => {
+  if (!text) return 1;
 
-  if (!data.meals) {
-    return [];
+  const cleaned = text.trim();
+
+  if (cleaned.includes("/")) {
+    const [a, b] = cleaned.split("/");
+    const result = Number(a) / Number(b);
+    return isNaN(result) ? 1 : result;
   }
 
-  return data.meals.map((meal) => ({
-    title: meal.strMeal,
-    image: meal.strMealThumb,
-    ingredients: formatIngredients(meal),
-    instructions: meal.strInstructions,
-    source: "api",
-    externalId: meal.idMeal,
-  }));
+  const num = parseFloat(cleaned);
+  return isNaN(num) ? 1 : num;
 };
 
 const formatIngredients = (meal) => {
   const ingredients = [];
+
   for (let i = 1; i <= 20; i++) {
-    const ingredient = meal[`strIngredient${i}`];
+    const ingredientName = meal[`strIngredient${i}`];
     const measure = meal[`strMeasure${i}`];
-    if (ingredient) {
-      ingredients.push(`${measure} ${ingredient}`.trim());
+
+    if (!ingredientName || ingredientName.trim() === "") continue;
+
+    const quantity = parseQuantity(measure);
+
+    let unit = "";
+    if (measure) {
+      unit = measure.replace(/[0-9./]/g, "").trim();
     }
+
+    ingredients.push({
+      name: ingredientName.trim(),
+      quantity,
+      unit,
+    });
   }
-  return ingredients.join("\n");
+
+  return ingredients;
 };
 
-export { searchRecipes };
+export const searchRecipes = async (query) => {
+  const response = await fetch(
+    `https://www.themealdb.com/api/json/v1/1/search.php?s=${query}`
+  );
+
+  const data = await response.json();
+
+  if (!data.meals) return [];
+
+  return data.meals.map((meal) => ({
+    title: meal.strMeal,
+    image: meal.strMealThumb,
+    instructions: meal.strInstructions,
+    source: "api",
+    externalId: meal.idMeal,
+    ingredients: formatIngredients(meal),
+  }));
+};

@@ -24,11 +24,11 @@ export const getById = async (req, res) => {
 
 export const create = async (req, res) => {
   try {
-    console.log("📦 Body recebido:", req.body); // ADICIONE ESTA LINHA
+    console.log("📦 Body recebido:", req.body);
     const recipe = await recipeService.createRecipe(req.body);
     res.status(201).json(recipe);
   } catch (error) {
-    console.log("❌ Erro:", error.message); // ADICIONE ESTA LINHA
+    console.log("❌ Erro:", error.message);
 
     res.status(400).json({ error: error.message });
   }
