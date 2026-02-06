@@ -31,9 +31,9 @@ model Ingredient {
 model RecipeIngredient {
   id           Int        @id @default(autoincrement())
   recipeId     Int
-  recipe       Recipe     @relation(fields: [recipeId], references: [id])
+  recipe       Recipe     @relation(fields: [recipeId], references: [id], onDelete: Cascade)
   ingredientId Int
-  ingredient   Ingredient @relation(fields: [ingredientId], references: [id])
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Restrict)
   quantity     Int
   unit         String
   createdAt    DateTime   @default(now())
@@ -50,9 +50,9 @@ model ShoppingList {
 model ShoppingListItem {
   id             Int          @id @default(autoincrement())
   shoppingListId Int
-  shoppingList   ShoppingList @relation(fields: [shoppingListId], references: [id])
+  shoppingList   ShoppingList @relation(fields: [shoppingListId], references: [id], onDelete: Cascade)
   ingredientId   Int
-  ingredient     Ingredient   @relation(fields: [ingredientId], references: [id])
+  ingredient     Ingredient   @relation(fields: [ingredientId], references: [id], onDelete: Restrict)
   quantity       Int
   unit           String
   createdAt      DateTime     @default(now())

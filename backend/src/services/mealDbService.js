@@ -5,7 +5,7 @@ const parseQuantity = (text) => {
 
   if (cleaned.includes("/")) {
     const [a, b] = cleaned.split("/");
-    const result = Number(a) / Number(b);
+    const result = parseInt(a) / parseInt(b);
     return isNaN(result) ? 1 : result;
   }
 
