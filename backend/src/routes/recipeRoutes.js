@@ -3,11 +3,11 @@ import * as recipeController from "../controllers/recipeController.js";
 
 const router = express.Router();
 
-router.get("/recipes", recipeController.getAll);
-router.get("/recipes/:id", recipeController.getById);
-router.post("/recipes", recipeController.create);
-router.put("/recipes/:id", recipeController.update);
-router.delete("/recipes/:id", recipeController.remove);
+router.get("/", recipeController.getAll);
 router.get("/search", recipeController.search);
+router.get("/:id", recipeController.getById);
+router.post("/", recipeController.create);
+router.put("/:id", recipeController.update);
+router.delete("/:id", recipeController.remove);
 
 export default router;

@@ -21,6 +21,7 @@ model Recipe {
 model Ingredient {
   id               Int                @id @default(autoincrement())
   name             String             @unique
+  defaultUnit String @default("unidade")
   category         String?
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt

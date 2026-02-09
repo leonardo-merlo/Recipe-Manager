@@ -12,9 +12,7 @@ function RecipeEdit() {
   const isEditMode = Boolean(id);
 
   useEffect(() => {
-    if (isEditMode) {
-      loadRecipe();
-    }
+    if (isEditMode) loadRecipe();
   }, [id]);
 
   const loadRecipe = async () => {
@@ -32,33 +30,19 @@ function RecipeEdit() {
 
   const handleSubmit = async (formData) => {
     try {
-      // Adiciona o campo source
-      const recipeData = {
-        ...formData,
-        source: "user",
-      };
-
-      if (isEditMode) {
-        await updateRecipe(id, recipeData);
-        alert("Receita atualizada!");
-      } else {
-        await createRecipe(recipeData);
-        alert("Receita criada!");
-      }
-
+      const recipeData = { ...formData, source: "user" };
+      if (isEditMode) await updateRecipe(id, recipeData);
+      else await createRecipe(recipeData);
+      alert(`Receita ${isEditMode ? "atualizada" : "criada"}!`);
       navigate("/");
     } catch (err) {
       alert("Erro ao salvar: " + err.message);
     }
   };
 
-  const handleCancel = () => {
-    navigate("/");
-  };
+  const handleCancel = () => navigate("/");
 
-  if (loading) {
-    return <div style={styles.container}>Carregando...</div>;
-  }
+  if (loading) return <div style={styles.container}>Carregando...</div>;
 
   return (
     <div style={styles.container}>
@@ -73,11 +57,7 @@ function RecipeEdit() {
 }
 
 const styles = {
-  container: {
-    maxWidth: "800px",
-    margin: "0 auto",
-    padding: "20px",
-  },
+  container: { maxWidth: "800px", margin: "0 auto", padding: "20px" },
 };
 
 export default RecipeEdit;

@@ -13,6 +13,7 @@ function Search() {
     try {
       setLoading(true);
       setError(null);
+
       const data = await searchRecipes(query);
       setResults(data);
 
@@ -20,7 +21,7 @@ function Search() {
         setError("Nenhuma receita encontrada. Tente outro termo!");
       }
     } catch (err) {
-      setError(err.message);
+      setError("Erro ao buscar receitas: " + err.message);
     } finally {
       setLoading(false);
     }
@@ -28,17 +29,16 @@ function Search() {
 
   const handleSave = async (recipe) => {
     try {
-      // Adiciona o campo source como 'api'
+      // Adiciona source 'api' e salva no banco
       const recipeData = {
         ...recipe,
         source: "api",
       };
-
       await createRecipe(recipeData);
       alert("Receita salva com sucesso!");
-      navigate("/");
+      navigate("/"); // volta para home
     } catch (err) {
-      alert("Erro ao salvar: " + err.message);
+      alert("Erro ao salvar receita: " + err.message);
     }
   };
 
@@ -54,7 +54,6 @@ function Search() {
       <SearchBar onSearch={handleSearch} />
 
       {loading && <p style={styles.loading}>Buscando receitas...</p>}
-
       {error && <p style={styles.error}>{error}</p>}
 
       {results.length > 0 && (
@@ -65,7 +64,11 @@ function Search() {
               <div style={styles.content}>
                 <h3 style={styles.title}>{recipe.title}</h3>
                 <p style={styles.preview}>
-                  {recipe.ingredients.split("\n").slice(0, 3).join(", ")}...
+                  {recipe.ingredients
+                    .map((i) => i.name)
+                    .slice(0, 3)
+                    .join(", ")}
+                  ...
                 </p>
                 <button
                   onClick={() => handleSave(recipe)}
@@ -83,11 +86,7 @@ function Search() {
 }
 
 const styles = {
-  container: {
-    maxWidth: "1200px",
-    margin: "0 auto",
-    padding: "20px",
-  },
+  container: { maxWidth: "1200px", margin: "0 auto", padding: "20px" },
   header: {
     display: "flex",
     justifyContent: "space-between",
@@ -102,16 +101,8 @@ const styles = {
     borderRadius: "4px",
     cursor: "pointer",
   },
-  loading: {
-    textAlign: "center",
-    color: "#666",
-    fontSize: "18px",
-  },
-  error: {
-    textAlign: "center",
-    color: "#f44336",
-    fontSize: "16px",
-  },
+  loading: { textAlign: "center", color: "#666", fontSize: "18px" },
+  error: { textAlign: "center", color: "#f44336", fontSize: "16px" },
   grid: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
@@ -124,23 +115,10 @@ const styles = {
     backgroundColor: "white",
     boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
   },
-  image: {
-    width: "100%",
-    height: "200px",
-    objectFit: "cover",
-  },
-  content: {
-    padding: "15px",
-  },
-  title: {
-    margin: "0 0 10px 0",
-    fontSize: "18px",
-  },
-  preview: {
-    fontSize: "14px",
-    color: "#666",
-    marginBottom: "15px",
-  },
+  image: { width: "100%", height: "200px", objectFit: "cover" },
+  content: { padding: "15px" },
+  title: { margin: "0 0 10px 0", fontSize: "18px" },
+  preview: { fontSize: "14px", color: "#666", marginBottom: "15px" },
   btnSave: {
     width: "100%",
     padding: "10px",

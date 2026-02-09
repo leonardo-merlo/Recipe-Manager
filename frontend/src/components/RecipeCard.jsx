@@ -1,7 +1,15 @@
+import { useNavigate } from "react-router-dom";
+
 function RecipeCard({ recipe, onDelete, onEdit }) {
+  const navigate = useNavigate();
   return (
-    <div style={styles.card}>
-      <img src={recipe.image} alt={recipe.title} style={styles.image} />
+    <div style={styles.card} onClick={() => navigate(`/recipes/${recipe.id}`)}>
+      <img
+        src={recipe.image}
+        alt={recipe.title}
+        style={styles.image}
+        onClick={() => navigate(`"/recipes/${recipe.id}"`)}
+      />
       <div style={styles.content}>
         <h3 style={styles.title}>{recipe.title}</h3>
         <p style={styles.source}>

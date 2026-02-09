@@ -3,9 +3,9 @@ import * as shoppingListController from "../controllers/shoppingListController.j
 
 const router = express.Router();
 
-router.get("/shopping-lists", shoppingListController.getAll);
-router.get("/shopping-lists/:id", shoppingListController.getById);
-router.post("/shopping-lists", shoppingListController.create);
-router.delete("/shopping-lists/:id", shoppingListController.remove);
+router.get("/", shoppingListController.getAll);
+router.get("/:id", shoppingListController.getById);
+router.post("/", shoppingListController.create);
+router.delete("/:id", shoppingListController.remove);
 
 export default router;

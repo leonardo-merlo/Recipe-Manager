@@ -7,8 +7,8 @@ router.get(
   "/shopping-list-items/:shoppingListId",
   shoppingListItemController.getIAll
 );
-router.post("/shopping-list-items", shoppingListItemController.create);
-router.put("/shopping-list-items/:id", shoppingListItemController.update);
-router.delete("/shopping-list-items/:id", shoppingListItemController.remove);
+router.post("/", shoppingListItemController.create);
+router.put("/:id", shoppingListItemController.update);
+router.delete("/:id", shoppingListItemController.remove);
 
 export default router;

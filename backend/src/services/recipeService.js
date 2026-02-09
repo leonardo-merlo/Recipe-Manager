@@ -29,18 +29,57 @@ export const getRecipeById = async (id) => {
 
 export const createRecipe = async (data) => {
   const validated = validateRecipe(data);
+
+  const recipeIngredients = [];
+
+  for (const ing of validated.ingredients) {
+    let ingredient = null;
+
+    // Se já veio ingredientId (receita manual)
+    if (ing.ingredientId) {
+      ingredient = await prisma.ingredient.findUnique({
+        where: { id: ing.ingredientId },
+      });
+    }
+
+    // Se NÃO veio → procurar pelo nome
+    if (!ingredient && ing.name) {
+      ingredient = await prisma.ingredient.findFirst({
+        where: {
+          name: {
+            equals: ing.name,
+            mode: "insensitive",
+          },
+        },
+      });
+    }
+
+    // Se ainda não existe → cria
+    if (!ingredient) {
+      ingredient = await prisma.ingredient.create({
+        data: {
+          name: ing.name,
+          category: ing.category || null,
+        },
+      });
+    }
+
+    recipeIngredients.push({
+      ingredientId: ingredient.id,
+      quantity: ing.quantity,
+      unit: ing.unit,
+    });
+  }
+
   return await prisma.recipe.create({
     data: {
       title: validated.title,
       image: validated.image,
       instructions: validated.instructions,
       source: validated.source,
+
       RecipeIngredient: {
-        create: validated.ingredients.map((ing) => ({
-          ingredientId: ing.ingredientId,
-          quantity: ing.quantity,
-          unit: ing.unit,
-        })),
+        create: recipeIngredients,
       },
     },
     include: {

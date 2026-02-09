@@ -13,6 +13,8 @@ const handleResponse = async (response) => {
   return response.json();
 };
 
+// RECIPES
+
 export const getAllRecipes = async () => {
   const response = await fetch(`${API_URL}/recipes`);
   return handleResponse(response);
@@ -53,6 +55,95 @@ export const deleteRecipe = async (id) => {
 };
 
 export const searchRecipes = async (query) => {
-  const response = await fetch(`${API_URL}/search?q=${query}`);
+  const response = await fetch(`${API_URL}/recipes/search?q=${query}`);
+  return handleResponse(response);
+};
+
+// INGREDIENTS
+
+export const getAllIngredients = async () => {
+  console.log("Fetching ingredients from API...");
+  const response = await fetch(`${API_URL}/ingredients`);
+  console.log("Response received:", response);
+  return handleResponse(response);
+};
+
+export const createIngredient = async (ingredientData) => {
+  const response = await fetch(`${API_URL}/ingredients`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(ingredientData),
+  });
+  return handleResponse(response);
+};
+
+// SHOPPING LIST ITEMS
+
+export const getAllShoppingListItems = async (shoppingListId) => {
+  const response = await fetch(
+    `${API_URL}/shopping-list-items/${shoppingListId}`,
+  );
+  return handleResponse(response);
+};
+
+export const createShoppingListItem = async (itemData) => {
+  const response = await fetch(`${API_URL}/shopping-list-items`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(itemData),
+  });
+  return handleResponse(response);
+};
+
+export const updateShoppingListItem = async (id, itemData) => {
+  const response = await fetch(`${API_URL}/shopping-list-items/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(itemData),
+  });
+  return handleResponse(response);
+};
+
+export const deleteShoppingListItem = async (id) => {
+  const response = await fetch(`${API_URL}/shopping-list-items/${id}`, {
+    method: "DELETE",
+  });
+  return handleResponse(response);
+};
+
+// SHOPPING LIST
+
+export const getAllShoppingLists = async () => {
+  const response = await fetch(`${API_URL}/shopping-lists`);
+  return handleResponse(response);
+};
+
+export const getShoppingListById = async (id) => {
+  const response = await fetch(`${API_URL}/shopping-lists/${id}`);
+  return handleResponse(response);
+};
+
+export const createShoppingList = async (data) => {
+  const response = await fetch(`${API_URL}/shopping-lists`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  return handleResponse(response);
+};
+
+export const updateShoppingList = async (id, data) => {
+  const response = await fetch(`${API_URL}/shopping-lists/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  return handleResponse(response);
+};
+
+export const deleteShoppingList = async (id) => {
+  const response = await fetch(`${API_URL}/shopping-lists/${id}`, {
+    method: "DELETE",
+  });
   return handleResponse(response);
 };
