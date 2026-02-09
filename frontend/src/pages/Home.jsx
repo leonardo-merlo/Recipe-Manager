@@ -36,6 +36,7 @@ function Home() {
       // Atualiza a lista removendo a receita deletada
       setRecipes(recipes.filter((recipe) => recipe.id !== id));
       alert("Receita deletada com sucesso!");
+      navigate("/");
     } catch (err) {
       alert("Erro ao deletar: " + err.message);
     }

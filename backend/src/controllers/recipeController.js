@@ -1,5 +1,6 @@
 import * as recipeService from "../services/recipeService.js";
-import { searchRecipes } from "../services/mealDbService.js";
+import { searchMealsFromAPI } from "../services/mealDbService.js";
+import { createRecipeFromApi } from "../services/createRecipeFromApi.js";
 
 export const getAll = async (req, res) => {
   try {
@@ -45,8 +46,9 @@ export const update = async (req, res) => {
 
 export const remove = async (req, res) => {
   try {
-    await recipeService.deleteRecipe(req.params.id);
-    res.status(200).send();
+    const deletedRecipe = await recipeService.deleteRecipe(req.params.id);
+
+    res.status(200).json(deletedRecipe);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -60,9 +62,19 @@ export const search = async (req, res) => {
         .status(400)
         .json({ error: "Parâmetro de pesquisa é obrigatório" });
     }
-    const recipes = await searchRecipes(q);
+    const recipes = await searchMealsFromAPI(q);
     res.json(recipes);
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+};
+
+export const createFromApi = async (req, res) => {
+  try {
+    const recipe = await createRecipeFromApi(req.body);
+    res.json(recipe);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Erro ao salvar receita da API" });
   }
 };

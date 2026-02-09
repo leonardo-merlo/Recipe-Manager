@@ -59,6 +59,18 @@ export const searchRecipes = async (query) => {
   return handleResponse(response);
 };
 
+export const createRecipeFromApi = async (recipeData) => {
+  const response = await fetch(`${API_URL}/recipes/from-api`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(recipeData),
+  });
+
+  return handleResponse(response);
+};
+
 // INGREDIENTS
 
 export const getAllIngredients = async () => {

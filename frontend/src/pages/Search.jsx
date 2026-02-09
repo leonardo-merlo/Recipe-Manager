@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SearchBar from "../components/SearchBar";
-import { searchRecipes, createRecipe } from "../services/api";
+import { searchRecipes, createRecipeFromApi } from "../services/api";
 
 function Search() {
   const [results, setResults] = useState([]);
@@ -10,11 +10,14 @@ function Search() {
   const navigate = useNavigate();
 
   const handleSearch = async (query) => {
+    console.log("🔍 Buscando por:", query);
     try {
       setLoading(true);
       setError(null);
 
       const data = await searchRecipes(query);
+      console.log("RESULTADOS API:");
+
       setResults(data);
 
       if (data.length === 0) {
@@ -29,16 +32,12 @@ function Search() {
 
   const handleSave = async (recipe) => {
     try {
-      // Adiciona source 'api' e salva no banco
-      const recipeData = {
-        ...recipe,
-        source: "api",
-      };
-      await createRecipe(recipeData);
-      alert("Receita salva com sucesso!");
-      navigate("/"); // volta para home
+      await createRecipeFromApi(recipe);
+
+      alert("Receita salva!");
+      navigate("/");
     } catch (err) {
-      alert("Erro ao salvar receita: " + err.message);
+      alert("Erro ao salvar: " + err.message);
     }
   };
 
@@ -64,11 +63,7 @@ function Search() {
               <div style={styles.content}>
                 <h3 style={styles.title}>{recipe.title}</h3>
                 <p style={styles.preview}>
-                  {recipe.ingredients
-                    .map((i) => i.name)
-                    .slice(0, 3)
-                    .join(", ")}
-                  ...
+                  {recipe.ingredients.map((i) => i.name).join(", ")}
                 </p>
                 <button
                   onClick={() => handleSave(recipe)}

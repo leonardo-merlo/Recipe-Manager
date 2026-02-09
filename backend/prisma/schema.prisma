@@ -12,8 +12,9 @@ model Recipe {
   title            String
   image            String
   RecipeIngredient RecipeIngredient[]
-  instructions     String
+  instructions     String? @db.Text
   source           String
+  externalId       String?            @unique
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
 }

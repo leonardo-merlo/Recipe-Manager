@@ -39,9 +39,9 @@ const formatIngredients = (meal) => {
   return ingredients;
 };
 
-export const searchRecipes = async (query) => {
+export const searchMealsFromAPI = async (query) => {
   const response = await fetch(
-    `https://www.themealdb.com/api/json/v1/1/search.php?s=${query}`
+    `https://www.themealdb.com/api/json/v1/1/search.php?s=${query}`,
   );
 
   const data = await response.json();
