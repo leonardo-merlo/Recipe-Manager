@@ -1,6 +1,5 @@
 import * as recipeService from "../services/recipeService.js";
 import { searchMealsFromAPI } from "../services/mealDbService.js";
-import { createRecipeFromApi } from "../services/createRecipeFromApi.js";
 
 export const getAll = async (req, res) => {
   try {

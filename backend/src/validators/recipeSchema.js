@@ -13,7 +13,7 @@ export const recipeSchema = z.object({
         ingredientId: z.number().int().positive(),
         quantity: z.number().positive(),
         unit: z.string().optional(),
-      })
+      }),
     )
     .min(1, "Recipe must have at least one ingredient"),
 

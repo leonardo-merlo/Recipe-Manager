@@ -8,21 +8,22 @@ datasource db {
 }
 
 model Recipe {
-  id               Int                @id @default(autoincrement())
-  title            String
-  image            String
-  RecipeIngredient RecipeIngredient[]
-  instructions     String? @db.Text
-  source           String
-  externalId       String?            @unique
-  createdAt        DateTime           @default(now())
-  updatedAt        DateTime           @updatedAt
+  id                 Int                  @id @default(autoincrement())
+  title              String
+  image              String
+  RecipeIngredient   RecipeIngredient[]
+  instructions       String?              @db.Text
+  source             String
+  externalId         String?              @unique
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  ShoppingListRecipe ShoppingListRecipe[]
 }
 
 model Ingredient {
   id               Int                @id @default(autoincrement())
   name             String             @unique
-  defaultUnit String @default("unidade")
+  defaultUnit      String             @default("unidade")
   category         String?
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
@@ -43,10 +44,12 @@ model RecipeIngredient {
 }
 
 model ShoppingList {
-  id               Int                @id @default(autoincrement())
-  createdAt        DateTime           @default(now())
-  updatedAt        DateTime           @updatedAt
-  ShoppingListItem ShoppingListItem[]
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  items   ShoppingListItem[]
+  recipes ShoppingListRecipe[]
 }
 
 model ShoppingListItem {
@@ -55,8 +58,24 @@ model ShoppingListItem {
   shoppingList   ShoppingList @relation(fields: [shoppingListId], references: [id], onDelete: Cascade)
   ingredientId   Int
   ingredient     Ingredient   @relation(fields: [ingredientId], references: [id], onDelete: Restrict)
-  quantity       Int
+  quantity       Float
   unit           String
+  isManual       Boolean      @default(true)
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
+
+  @@unique([shoppingListId, ingredientId])
+}
+
+model ShoppingListRecipe {
+  id             Int          @id @default(autoincrement())
+  shoppingListId Int
+  shoppingList   ShoppingList @relation(fields: [shoppingListId], references: [id], onDelete: Cascade)
+  recipeId       Int
+  recipe         Recipe       @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  multiplier     Int          @default(1)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@unique([shoppingListId, recipeId])
 }

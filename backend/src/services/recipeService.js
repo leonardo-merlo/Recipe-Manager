@@ -35,14 +35,12 @@ export const createRecipe = async (data) => {
   for (const ing of validated.ingredients) {
     let ingredient = null;
 
-    // Se já veio ingredientId (receita manual)
     if (ing.ingredientId) {
       ingredient = await prisma.ingredient.findUnique({
         where: { id: ing.ingredientId },
       });
     }
 
-    // Se NÃO veio → procurar pelo nome
     if (!ingredient && ing.name) {
       ingredient = await prisma.ingredient.findFirst({
         where: {
@@ -54,7 +52,6 @@ export const createRecipe = async (data) => {
       });
     }
 
-    // Se ainda não existe → cria
     if (!ingredient) {
       ingredient = await prisma.ingredient.create({
         data: {
@@ -121,4 +118,42 @@ export const deleteRecipe = async (id) => {
   return await prisma.recipe.delete({
     where: { id: parseInt(id) },
   });
+};
+
+export const createRecipeFromApi = async (recipe) => {
+  const newRecipe = await prisma.recipe.create({
+    data: {
+      title: recipe.title,
+      image: recipe.image,
+      instructions: recipe.instructions,
+      source: "api",
+      externalId: recipe.externalId,
+    },
+  });
+
+  for (const ing of recipe.ingredients) {
+    let dbIngredient = await prisma.ingredient.findUnique({
+      where: { name: ing.name },
+    });
+
+    if (!dbIngredient) {
+      dbIngredient = await prisma.ingredient.create({
+        data: {
+          name: ing.name,
+          defaultUnit: ing.unit || "",
+        },
+      });
+    }
+
+    await prisma.recipeIngredient.create({
+      data: {
+        recipeId: newRecipe.id,
+        ingredientId: dbIngredient.id,
+        quantity: ing.quantity || 1,
+        unit: ing.unit || dbIngredient.defaultUnit || "",
+      },
+    });
+  }
+
+  return newRecipe;
 };

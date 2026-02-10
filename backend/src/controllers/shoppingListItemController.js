@@ -1,49 +1,42 @@
-import * as shoppingListItemService from "../services/shoppingListItemService.js";
-import { validateShoppingListItem } from "../validators/shoppingListItemSchema.js";
+import * as itemService from "../services/shoppingListItemService.js";
 
-export const getIAll = async (req, res) => {
+export const getItemsByShoppingListId = async (req, res) => {
   try {
-    const items = await shoppingListItemService.getItemsByShoppingListId(
-      req.params.shoppingListId
+    const items = await itemService.getItemsByShoppingListId(
+      req.params.shoppingListId,
     );
     res.json(items);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
 
-export const create = async (req, res) => {
+export const createShoppingListItem = async (req, res) => {
   try {
-    const validated = validateShoppingListItem(req.body);
-    const newItem = await shoppingListItemService.createShoppingListItem(
-      validated
-    );
-    res.status(201).json(newItem);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
+    const item = await itemService.createShoppingListItem(req.body);
+    res.status(201).json(item);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
 };
 
-export const update = async (req, res) => {
+export const updateShoppingListItem = async (req, res) => {
   try {
-    const validated = validateShoppingListItem(req.body);
-    const updatedItem = await shoppingListItemService.updateShoppingListItem(
+    const item = await itemService.updateShoppingListItem(
       req.params.id,
-      validated
+      req.body,
     );
-    res.json(updatedItem);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.json(item);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
 };
 
-export const remove = async (req, res) => {
+export const deleteShoppingListItem = async (req, res) => {
   try {
-    const deletedItem = await shoppingListItemService.deleteShoppingListItem(
-      req.params.id
-    );
-    res.json(deletedItem);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    await itemService.deleteShoppingListItem(req.params.id);
+    res.status(204).send();
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
