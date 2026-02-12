@@ -50,20 +50,44 @@ const rebuildItems = async (shoppingListId) => {
     where: { shoppingListId },
   });
 
+  console.log("RECIPES NA LISTA:", recipes);
+
   for (const r of recipes) {
+    console.log("PROCESSANDO RECEITA:", r.recipeId);
+
     const ingredients = await prisma.recipeIngredient.findMany({
       where: { recipeId: r.recipeId },
     });
 
+    console.log("INGREDIENTES ENCONTRADOS:", ingredients);
+
     for (const ing of ingredients) {
-      await prisma.shoppingListItem.create({
-        data: {
-          shoppingListId,
-          ingredientId: ing.ingredientId,
-          quantity: ing.quantity * r.multiplier,
-          unit: ing.unit,
+      const existingItem = await prisma.shoppingListItem.findUnique({
+        where: {
+          shoppingListId_ingredientId: {
+            shoppingListId,
+            ingredientId: ing.ingredientId,
+          },
         },
       });
+
+      if (existingItem) {
+        await prisma.shoppingListItem.update({
+          where: { id: existingItem.id },
+          data: {
+            quantity: existingItem.quantity + ing.quantity * r.multiplier,
+          },
+        });
+      } else {
+        await prisma.shoppingListItem.create({
+          data: {
+            shoppingListId,
+            ingredientId: ing.ingredientId,
+            quantity: ing.quantity * r.multiplier,
+            unit: ing.unit,
+          },
+        });
+      }
     }
   }
 };
