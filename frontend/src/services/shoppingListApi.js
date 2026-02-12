@@ -1,4 +1,6 @@
-const API_URL = "/api/shopping-lists";
+const API_URL =
+  (import.meta.env.VITE_API_URL || "http://localhost:3000/api") +
+  "/shopping-lists";
 
 // Shopping List
 export const createShoppingList = async () => {
@@ -48,7 +50,7 @@ export const addRecipe = async (shoppingListId, recipeId, multiplier = 1) => {
   const res = await fetch(`${API_URL}/${shoppingListId}/recipes`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ shoppingListId, recipeId, multiplier }),
+    body: JSON.stringify({ recipeId, multiplier }),
   });
   return res.json();
 };

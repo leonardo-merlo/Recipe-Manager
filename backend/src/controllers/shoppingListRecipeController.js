@@ -2,9 +2,21 @@ import * as recipeService from "../services/shoppingListRecipeService.js";
 
 export const addRecipeToShoppingList = async (req, res) => {
   try {
-    const data = await recipeService.addRecipeToShoppingList(req.body);
+    console.log("Params:", req.params);
+    console.log("Body:", req.body);
+
+    const shoppingListId = Number(req.params.id);
+    const { recipeId, multiplier } = req.body;
+
+    const data = await recipeService.addRecipeToShoppingList({
+      shoppingListId,
+      recipeId,
+      multiplier,
+    });
+
     res.status(201).json(data);
   } catch (error) {
+    console.error(error);
     res.status(400).json({ error: error.message });
   }
 };

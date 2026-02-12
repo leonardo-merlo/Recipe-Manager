@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import RecipeCard from "../components/RecipeCard";
 import { getAllRecipes, deleteRecipe } from "../services/api";
+import { createShoppingList, addRecipe } from "../services/shoppingListApi";
 
 function Home() {
   const [recipes, setRecipes] = useState([]);
@@ -9,7 +10,6 @@ function Home() {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  // Carregar receitas quando a página abre
   useEffect(() => {
     loadRecipes();
   }, []);
@@ -30,10 +30,8 @@ function Home() {
     if (!window.confirm("Tem certeza que deseja deletar esta receita?")) {
       return;
     }
-
     try {
       await deleteRecipe(id);
-      // Atualiza a lista removendo a receita deletada
       setRecipes(recipes.filter((recipe) => recipe.id !== id));
       alert("Receita deletada com sucesso!");
       navigate("/");
@@ -45,11 +43,9 @@ function Home() {
   const handleEdit = (id) => {
     navigate(`/recipes/${id}/edit`);
   };
-
   if (loading) {
     return <div style={styles.container}>Carregando...</div>;
   }
-
   if (error) {
     return (
       <div style={styles.container}>
@@ -60,6 +56,22 @@ function Home() {
       </div>
     );
   }
+
+  const handleAddToShoppingList = async (recipeId) => {
+    try {
+      let shoppingListId = localStorage.getItem("shoppingListId");
+      if (!shoppingListId) {
+        const newShoppingList = await createShoppingList();
+        shoppingListId = newShoppingList.id;
+        localStorage.setItem("shoppingListId", shoppingListId);
+      }
+      await addRecipe(shoppingListId, recipeId);
+      alert("Receita adicionada à lista de compras!");
+      navigate(`/shopping-lists/${shoppingListId}`);
+    } catch (err) {
+      alert("Erro ao adicionar à lista de compras: " + err.message);
+    }
+  };
 
   return (
     <div style={styles.container}>
@@ -91,6 +103,7 @@ function Home() {
               recipe={recipe}
               onDelete={handleDelete}
               onEdit={handleEdit}
+              onAddToShoppingList={handleAddToShoppingList}
             />
           ))}
         </div>

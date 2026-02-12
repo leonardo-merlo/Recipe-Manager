@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-function RecipeCard({ recipe, onDelete, onEdit }) {
+function RecipeCard({ recipe, onDelete, onEdit, onAddToShoppingList }) {
   const navigate = useNavigate();
   return (
     <div style={styles.card} onClick={() => navigate(`/recipes/${recipe.id}`)}>
@@ -22,13 +22,21 @@ function RecipeCard({ recipe, onDelete, onEdit }) {
           <button onClick={() => onDelete(recipe.id)} style={styles.btnDelete}>
             Deletar
           </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onAddToShoppingList(recipe.id);
+            }}
+            style={styles.btnAdd}
+          >
+            Adicionar à lista
+          </button>
         </div>
       </div>
     </div>
   );
 }
 
-// Estilos inline simples (pode mover pra CSS depois)
 const styles = {
   card: {
     border: "1px solid #ddd",
@@ -74,6 +82,15 @@ const styles = {
     flex: 1,
     padding: "8px",
     backgroundColor: "#f44336",
+    color: "white",
+    border: "none",
+    borderRadius: "4px",
+    cursor: "pointer",
+  },
+  btnAdd: {
+    flex: 1,
+    padding: "8px",
+    backgroundColor: "#2196F3",
     color: "white",
     border: "none",
     borderRadius: "4px",

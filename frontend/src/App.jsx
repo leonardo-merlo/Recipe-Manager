@@ -3,8 +3,11 @@ import Home from "./pages/Home";
 import Search from "./pages/Search";
 import RecipeDetail from "./pages/RecipeDetail";
 import RecipeEdit from "./pages/RecipeEdit";
+import ShoppingList from "./pages/ShoppingList";
 
 function App() {
+  const shoppingListId = localStorage.getItem("shoppingListId");
+
   return (
     <BrowserRouter>
       <div style={styles.app}>
@@ -22,6 +25,12 @@ function App() {
             <Link to="/recipes/new" style={styles.link}>
               + Nova Receita
             </Link>
+            <Link
+              to={shoppingListId ? `/shopping-lists/${shoppingListId}` : "/"}
+              style={styles.link}
+            >
+              Lista de Compras
+            </Link>
           </div>
         </nav>
 
@@ -32,6 +41,7 @@ function App() {
             <Route path="/recipes/new" element={<RecipeEdit />} />
             <Route path="/recipes/:id" element={<RecipeDetail />} />
             <Route path="/recipes/:id/edit" element={<RecipeEdit />} />
+            <Route path="/shopping-lists/:id" element={<ShoppingList />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>

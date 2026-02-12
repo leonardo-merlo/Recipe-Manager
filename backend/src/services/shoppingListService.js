@@ -10,7 +10,11 @@ export const getShoppingListById = async (id) => {
   return prisma.shoppingList.findUnique({
     where: { id: Number(id) },
     include: {
-      recipes: true,
+      recipes: {
+        include: {
+          recipe: true,
+        },
+      },
       items: {
         include: {
           ingredient: true,
