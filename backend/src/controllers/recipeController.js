@@ -70,7 +70,7 @@ export const search = async (req, res) => {
 
 export const createFromApi = async (req, res) => {
   try {
-    const recipe = await createRecipeFromApi(req.body);
+    const recipe = await recipeService.createRecipeFromApi(req.body);
     res.json(recipe);
   } catch (error) {
     console.error(error);
