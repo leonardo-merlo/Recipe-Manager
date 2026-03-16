@@ -112,6 +112,8 @@ async function main() {
     { name: "Manjericão", defaultUnit: "g", category: "Tempero" },
     { name: "Salsa", defaultUnit: "maço", category: "Tempero" },
     { name: "Cebolinha", defaultUnit: "maço", category: "Tempero" },
+    { name: "Canela", defaultUnit: "g", category: "Tempero" },
+    { name: "Cacau em pó", defaultUnit: "g", category: "Tempero" },
 
     // ================= OLEAGINOSAS =================
     { name: "Amendoim", defaultUnit: "g", category: "Oleaginosa" },
@@ -121,6 +123,9 @@ async function main() {
     { name: "Amêndoas", defaultUnit: "g", category: "Oleaginosa" },
     { name: "Chia", defaultUnit: "g", category: "Oleaginosa" },
     { name: "Linhaça", defaultUnit: "g", category: "Oleaginosa" },
+    { name: "Gergelim", defaultUnit: "g", category: "Oleaginosa" },
+    { name: "Semente de abóbora", defaultUnit: "g", category: "Oleaginosa" },
+    { name: "Semente de girassol", defaultUnit: "g", category: "Oleaginosa" },
   ];
 
   for (const ing of ingredients) {
